@@ -6,18 +6,26 @@
 
   <groupId>enacrobotique</groupId>
   <artifactId>controbot</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <name>controbot</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>13</maven.compiler.release>
+    <junit.jupiter.version>5.6.2</junit.jupiter.version>
   </properties>
-
+	
   <dependencies>
+
+  <dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
@@ -65,6 +73,15 @@
 <reporting>
     <plugins>
 
+    <plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+			</plugin>
+
       <!-- run `mvn site` to check code conventions -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -81,13 +98,78 @@
           </reportSet>
         </reportSets>
       </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+          <use>false</use>
+         
+                  <doclet>nl.talsmasoftware.umldoclet.UMLDoclet</doclet>
+                        <docletArtifact>
+                            <groupId>nl.talsmasoftware</groupId>
+                            <artifactId>umldoclet</artifactId>
+                            <version>2.0.9</version>
+                        </docletArtifact>
+                        <additionalOptions>
+                            <!--<additionalOption>...</additionalOption>-->
+                        </additionalOptions>
+
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <id>default</id>
+            <configuration>
+
+            </configuration>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+          </reportSet>
+          <reportSet>
+            <id>aggregate</id>
+            <configuration>
+            </configuration>
+            <reports>
+              <report>aggregate</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
     </plugins>
   </reporting>
 
   <build>
+  <plugins>
+      <plugin>
+				<artifactId>plantuml-generator-maven-plugin</artifactId>
+				<groupId>de.elnarion.maven</groupId>
+				<version>1.1.2</version>
+				<executions>
+					<execution>
+						<id>generate-simple-diagram</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-test-sources</phase>
+						<configuration>
+							<outputFilename>testdiagram1.txt</outputFilename>
+							<scanPackages>
+								<scanPackage>
+									fr.enac.sita.controbot
+								</scanPackage>
+							</scanPackages>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+      </plugins>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
-
         <!-- javafx lifecycle -->
         <plugin>
           <groupId>org.openjfx</groupId>
